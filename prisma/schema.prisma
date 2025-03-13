@@ -13,22 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+} 
 
-model User{
-  id       Int     @id @default(autoincrement())
-  username String  @unique
-  email    String  @unique
-
-}
-
-
-model ContactUs{
-  id            Int     @id  @default(autoincrement())
+model ContactUs {
+  id            Int      @id @default(autoincrement())
   name          String
   lastName      String
-  email         String @unique
-  contactNumber String 
+  email         String   @unique
+  contactNumber String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-
 }
