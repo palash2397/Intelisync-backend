@@ -1,10 +1,12 @@
 import { ApiResponse } from "../helpers/ApiResponse.js";
+import {mail} from "../helpers/mail.js" 
+
 import Joi from "joi";
 import prisma from "../DB/config.js";
 
 export const contactUsHandle = async (req, res) => {
   try {
-    const { name, lastName, email, contactNumber } = req.body;
+    const { name, lastName, email, contactNumber, message } = req.body;
     const schema = Joi.object({
       name: Joi.string().min(2).max(50).required(),
       lastName: Joi.string().min(2).max(50).required(),
@@ -16,6 +18,7 @@ export const contactUsHandle = async (req, res) => {
           "string.pattern.base":
             "Contact number must start with a country code ",
         }),
+       message: Joi.string().min(1).max(1000).required()
     });
 
     const { error } = schema.validate(req.body);
@@ -32,19 +35,24 @@ export const contactUsHandle = async (req, res) => {
       },
     });
 
-    if (existingUser) {
+    if (existingUser){
       return res
         .status(401)
         .json(
           new ApiResponse(200, {}, `Email or Contact Number already exists!`)
         );
     } else {
+
+      
+     
+      await mail( name, lastName, contactNumber, email)
       await prisma.contactUs.create({
         data: {
           name,
           lastName,
           email,
           contactNumber,
+          message
         },
       });
 

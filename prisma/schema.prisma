@@ -25,6 +25,7 @@ model ContactUs {
   lastName      String
   email         String   @unique
   contactNumber String
+  message       String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
